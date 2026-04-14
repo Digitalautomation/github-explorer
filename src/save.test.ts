@@ -42,6 +42,6 @@ describe("saveResults", () => {
     );
 
     const basename = path.basename(jsonPath);
-    expect(basename).not.toMatch(/[^a-zA-Z0-9._-]/);
+    expect(basename).not.toMatch(/[^a-zA-Z0-9._\-_]/);
   });
 });

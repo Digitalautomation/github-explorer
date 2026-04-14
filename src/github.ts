@@ -23,6 +23,16 @@ interface SearchResponse {
   }>;
 }
 
+/**
+ * Search GitHub repositories by query string.
+ *
+ * @param query - The search term to query GitHub repositories.
+ * @param limit - Maximum number of results to return (default: 10). Note: GitHub
+ *   API caps `per_page` at 100, so at most 100 results are returned regardless of
+ *   the value passed.
+ * @param token - GitHub Personal Access Token for authenticated API access.
+ * @returns A promise resolving to an array of matching {@link GitHubRepo} objects.
+ */
 export async function searchRepositories(
   query: string,
   limit: number,
@@ -60,6 +70,7 @@ function makeRequest<T>(url: string, token: string): Promise<T> {
         res.on("data", (chunk: Buffer) => {
           body += chunk.toString();
         });
+        res.on("error", reject);
         res.on("end", () => {
           if (res.statusCode && res.statusCode >= 400) {
             reject(

@@ -20,7 +20,11 @@ export function summarizeAsMarkdown(query: string, repos: GitHubRepo[]): string 
     lines.push(`## ${repo.owner}/${repo.name}`);
     lines.push("");
     if (repo.description) {
-      lines.push(`> ${repo.description}`);
+      const quoted = repo.description
+        .split("\n")
+        .map((line) => `> ${line}`)
+        .join("\n");
+      lines.push(quoted);
       lines.push("");
     }
     lines.push(`| Field | Value |`);

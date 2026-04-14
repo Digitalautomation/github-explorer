@@ -3,7 +3,7 @@ import { searchRepositories } from "./github";
 import { summarizeAsJson, summarizeAsMarkdown } from "./summarize";
 import { saveResults } from "./save";
 
-function parseArgs(args: string[]): { query: string; limit: number } {
+export function parseArgs(args: string[]): { query: string; limit: number } {
   let query = "";
   let limit = 10;
 
@@ -64,7 +64,11 @@ async function main(): Promise<void> {
   console.log(`  Markdown: ${mdPath}`);
 }
 
-main().catch((err: Error) => {
-  console.error(`Error: ${err.message}`);
-  process.exit(1);
-});
+// Only run main when executed directly (not when imported in tests)
+if (require.main === module) {
+  main().catch((err: unknown) => {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`Error: ${message}`);
+    process.exit(1);
+  });
+}
