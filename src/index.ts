@@ -1,3 +1,6 @@
+// Load .env file using Bun's built-in dotenv support
+import "../.env";
+
 import { summarizeReadme } from "./claude";
 import { pickRepo } from "./cli";
 import { fetchReadme, searchRepos } from "./github";
