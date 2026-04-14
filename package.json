@@ -1,0 +1,19 @@
+{
+  "name": "github-repo-explorer",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "validate": "bun run typecheck && bun run lint",
+    "typecheck": "tsc --noEmit",
+    "lint": "bunx @biomejs/biome check src/"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0"
+  }
+}
