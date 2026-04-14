@@ -7,18 +7,24 @@ export type Repo = {
 	stargazers_count: number;
 };
 
-const token = execSync("gh auth token").toString().trim();
+let cachedHeaders: Record<string, string> | undefined;
 
-const headers = {
-	Accept: "application/vnd.github+json",
-	"User-Agent": "github-repo-explorer",
-	Authorization: `Bearer ${token}`,
-};
+function getHeaders(): Record<string, string> {
+	if (!cachedHeaders) {
+		const token = execSync("gh auth token").toString().trim();
+		cachedHeaders = {
+			Accept: "application/vnd.github+json",
+			"User-Agent": "github-repo-explorer",
+			Authorization: `Bearer ${token}`,
+		};
+	}
+	return cachedHeaders;
+}
 
 export async function searchRepos(keyword: string): Promise<Repo[]> {
 	const res = await fetch(
 		`https://api.github.com/search/repositories?q=${encodeURIComponent(keyword)}&sort=stars&per_page=5`,
-		{ headers },
+		{ headers: getHeaders() },
 	);
 	if (!res.ok) {
 		throw new Error(`GitHub search failed: ${res.status} ${res.statusText}`);
@@ -33,7 +39,7 @@ export async function fetchReadme(
 ): Promise<string> {
 	const res = await fetch(
 		`https://api.github.com/repos/${owner}/${repo}/readme`,
-		{ headers },
+		{ headers: getHeaders() },
 	);
 	if (!res.ok) {
 		throw new Error(

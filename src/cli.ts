@@ -16,7 +16,7 @@ export async function pickRepo(repos: Repo[]): Promise<Repo> {
 		output: process.stdout,
 	});
 
-	const selected = await new Promise<Repo>((resolve) => {
+	const selected = await new Promise<Repo>((resolve, reject) => {
 		const ask = () => {
 			rl.question(`Enter number (1-${repos.length}): `, (answer) => {
 				const num = Number.parseInt(answer, 10);
@@ -30,6 +30,7 @@ export async function pickRepo(repos: Repo[]): Promise<Repo> {
 				}
 			});
 		};
+		rl.on("close", () => reject(new Error("Input closed before selection")));
 		ask();
 	});
 

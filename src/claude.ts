@@ -2,6 +2,8 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic();
 
+const MAX_README_CHARS = 8000;
+
 export async function summarizeReadme(
 	repoName: string,
 	readme: string,
@@ -22,9 +24,13 @@ Write a summary using exactly these four sections with prose paragraphs under ea
 ## Why it is interesting
 
 README:
-${readme.slice(0, 8000)}`,
+${readme.slice(0, MAX_README_CHARS)}`,
 			},
 		],
 	});
-	return (response.content[0] as { type: "text"; text: string }).text;
+	const textBlock = response.content.find((block) => block.type === "text");
+	if (!textBlock || textBlock.type !== "text") {
+		throw new Error("Claude returned no text content");
+	}
+	return textBlock.text;
 }
